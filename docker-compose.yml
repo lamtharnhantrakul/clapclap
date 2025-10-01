@@ -1,0 +1,21 @@
+services:
+  clap-run:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Mount data directory
+      - ./data:/app/data:ro
+      # Shared temp directory for combining files
+      - ./temp:/app/temp
+      # Persist model cache for HuggingFace models
+      - clap-model-cache:/root/.cache/huggingface
+      # Persist model cache for msclap
+      - clap-model-cache:/root/.cache/torch
+    environment:
+      - HF_HOME=/root/.cache/huggingface
+      - TORCH_HOME=/root/.cache/torch
+
+volumes:
+  clap-model-cache:
+    name: clap-model-cache

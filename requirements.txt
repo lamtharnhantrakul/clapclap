@@ -1,0 +1,8 @@
+torch>=2.0.0
+torchvision
+torchaudio
+transformers
+librosa
+soundfile
+msclap
+git+https://github.com/LAION-AI/CLAP.git
