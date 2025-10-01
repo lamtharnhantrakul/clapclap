@@ -19,6 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY clap_similarity.py .
 COPY generate_mixtures.py .
 COPY test_loudness_effect.py .
+COPY test_language_variations.py .
 
 # Create directory for model cache
 RUN mkdir -p /root/.cache/huggingface
