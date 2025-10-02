@@ -4,11 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      # Mount data directory
-      - ./data:/app/data:ro
-      # Shared temp directory for combining files
-      - ./temp:/app/temp
-      # Mount current directory for output files
+      # Mount current directory for output files and access to all test data
       - .:/app
       # Persist model cache for HuggingFace models
       - clap-model-cache:/root/.cache/huggingface
