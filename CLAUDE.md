@@ -8,6 +8,8 @@ This is a CLAP (Contrastive Language-Audio Pretraining) similarity tool that cal
 
 ## Development Commands
 
+**IMPORTANT**: Always prefer running commands in Docker containers rather than on the host environment. This ensures consistent dependencies (ffmpeg, Python packages, etc.) and avoids environment-specific issues.
+
 ### Build and Run
 
 ```bash
@@ -22,6 +24,21 @@ docker-compose run --rm clap-run python clap_similarity.py /app/test_data/exampl
 
 # Rebuild with fresh cache
 ./scripts/rebuild.sh
+```
+
+### Running Scripts in Docker
+
+For any Python scripts or operations requiring ffmpeg/audio processing:
+
+```bash
+# Run Python scripts in Docker
+docker-compose run --rm clap-run python3 /app/scripts/your_script.py
+
+# Pass environment variables
+docker-compose run --rm -e VAR_NAME=value clap-run python3 /app/scripts/script.py
+
+# Interactive shell (for debugging)
+docker-compose run --rm clap-run bash
 ```
 
 ### Dataset Validation
@@ -87,6 +104,8 @@ clapclap/
 - **Model Cache**: CLAP models cached in Docker volume `clap-model-cache` (persists across runs)
 - **Build Context**: Dockerfile copies `test_data/` and `data_sanity_checks/` into image
 - **No separate data volume**: All test data accessed via main mount
+- **Available Tools**: ffmpeg, Python 3.10, all audio processing libraries pre-installed
+- **Preference**: Always use Docker for scripts to ensure consistent environment
 
 ### Dataset Validation Pattern
 
