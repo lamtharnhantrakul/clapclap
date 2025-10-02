@@ -17,6 +17,10 @@ build/
 temp/
 *.log
 
+# Ignore duplicate/temporary test data
+test_data/hanoi_random_data/
+test_data/sample_datasets.py
+
 # OS
 .DS_Store
 Thumbs.db
