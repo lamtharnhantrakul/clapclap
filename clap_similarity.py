@@ -38,7 +38,10 @@ def calculate_similarity_msclap(audio_path: str, text_description: str, use_cuda
     text_embeddings = model.get_text_embeddings([text_description])
 
     # Calculate similarity (cosine similarity)
-    similarity = audio_embeddings @ text_embeddings.T
+    # Normalize embeddings to ensure proper cosine similarity calculation
+    audio_norm = audio_embeddings / np.linalg.norm(audio_embeddings, axis=1, keepdims=True)
+    text_norm = text_embeddings / np.linalg.norm(text_embeddings, axis=1, keepdims=True)
+    similarity = audio_norm @ text_norm.T
     similarity_score = float(similarity[0][0])
 
     return similarity_score
@@ -71,7 +74,10 @@ def calculate_similarity_laion(audio_path: str, text_description: str, use_cuda:
     )
 
     # Calculate similarity (cosine similarity)
-    similarity = audio_embed @ text_embed.T
+    # Normalize embeddings to ensure proper cosine similarity calculation
+    audio_norm = audio_embed / np.linalg.norm(audio_embed, axis=1, keepdims=True)
+    text_norm = text_embed / np.linalg.norm(text_embed, axis=1, keepdims=True)
+    similarity = audio_norm @ text_norm.T
     similarity_score = float(similarity[0][0])
 
     return similarity_score
