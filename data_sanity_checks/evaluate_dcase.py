@@ -34,8 +34,8 @@ def evaluate_dcase():
     results = []
 
     for audio_file in audio_files:
-        # Get corresponding text file
-        text_file = audio_file.with_suffix('.txt')
+        # Get corresponding text file with _description suffix
+        text_file = audio_file.parent / f"{audio_file.stem}_description.txt"
 
         if not text_file.exists():
             print(f"Warning: No text file found for {audio_file.name}")
