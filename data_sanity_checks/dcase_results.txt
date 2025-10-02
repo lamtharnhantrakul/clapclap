@@ -1,0 +1,50 @@
+DCASE CLAP Similarity Evaluation Results
+Evaluating 35 samples
+================================================================================
+
+dev_001.wav: 0.6074 - a buzzer is ringing with water in the background
+dev_002.wav: 0.6140 - a pig is grunting with water in the background
+dev_003.wav: 0.4695 - an alarm of a car door staying open is ringing with crowd in the background
+dev_005.wav: 0.5016 - a car horn is honking with crowd in the background
+dev_007.wav: 0.5398 - a burglar alarm is ringing with traffic in the background
+dev_011.wav: 0.4978 - a zipper is zipping with traffic in the background
+dev_012.wav: 0.5394 - a drill is operating with water in the background
+dev_013.wav: 0.4724 - a baby is sneezing with crowd in the background
+dev_014.wav: 0.5385 - a motorcycle is starting with water in the background
+dev_015.wav: 0.6852 - a gate is squeaking with water in the background
+dev_017.wav: 0.4881 - a train is stopping with water in the background
+dev_019.wav: 0.5595 - a burglar alarm is ringing with crowd in the background
+dev_020.wav: 0.5262 - a motorcycle is starting with crowd in the background
+dev_021.wav: 0.5200 - a buzzer is ringing with traffic in the background
+dev_022.wav: 0.3989 - a horse is galloping with traffic in the background
+dev_029.wav: 0.4202 - a small gun is shooting with traffic in the background
+dev_030.wav: 0.5453 - a large dog is barking with traffic in the background
+dev_031.wav: 0.5477 - a pen is writing with traffic in the background
+dev_032.wav: 0.6201 - a baby is sneezing with water in the background
+dev_033.wav: 0.6473 - a baby is laughing with traffic in the background
+dev_035.wav: 0.4248 - a small dog is barking with crowd in the background
+dev_036.wav: 0.4444 - a small gun is shooting with crowd in the background
+dev_037.wav: 0.4619 - a tank is rolling with crowd in the background
+dev_039.wav: 0.5609 - a metal gate is opening with traffic in the background
+dev_041.wav: 0.5813 - a small dog is whining with traffic in the background
+dev_043.wav: 0.5362 - a metal gate is opening with crowd in the background
+dev_044.wav: 0.4062 - a person is walking with crowd in the background
+dev_048.wav: 0.4686 - a zipper is zipping with crowd in the background
+dev_049.wav: 0.5535 - an analog alarm clock is ringing with crowd in the background
+dev_050.wav: 0.5102 - a small car is passing by with water in the background
+dev_051.wav: 0.5869 - a small dog is barking with traffic in the background
+dev_054.wav: 0.4717 - a small car is passing by with traffic in the background
+dev_056.wav: 0.4222 - a small car is starting with crowd in the background
+dev_058.wav: 0.5017 - an analog alarm clock is ringing with water in the background
+dev_060.wav: 0.5204 - a tank is rolling with traffic in the background
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+Number of samples: 35
+Mean similarity: 0.5197
+Std deviation: 0.0682
+Min similarity: 0.3989
+Max similarity: 0.6852
+Median similarity: 0.5204
+================================================================================

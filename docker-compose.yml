@@ -8,6 +8,8 @@ services:
       - ./data:/app/data:ro
       # Shared temp directory for combining files
       - ./temp:/app/temp
+      # Mount current directory for output files
+      - .:/app
       # Persist model cache for HuggingFace models
       - clap-model-cache:/root/.cache/huggingface
       # Persist model cache for msclap

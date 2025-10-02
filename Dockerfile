@@ -18,6 +18,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY clap_similarity.py .
 
+# Copy test data
+COPY test_data/ /app/test_data/
+
+# Copy sanity check scripts
+COPY data_sanity_checks/ /app/data_sanity_checks/
+
 # Create directory for model cache
 RUN mkdir -p /root/.cache/huggingface
 
