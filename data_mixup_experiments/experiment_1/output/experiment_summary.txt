@@ -1,0 +1,111 @@
+LibriSpeech + DCASE Audio Mixup Experiment - Summary
+================================================================================
+
+Total mixtures created: 5
+
+Mixture 1:
+  LibriSpeech: 1993-147149-0021.flac
+  DCASE: dev_002.wav
+
+  Speech description: a woman speaking with a clear voice while narrating a story
+  DCASE description: a pig is grunting with water in the background
+  Combined description: a woman speaking with a clear voice while narrating a story while a pig is grunting with water in the background
+
+  CLAP Similarity Scores:
+    Combined: 0.6733
+    Speech only: 0.3514
+    DCASE only: 0.6079
+    ✓ Combined description performs best
+
+  Output files:
+    Audio: mix_01_1993-147149-0021_dev_002.wav
+    Description: mix_01_1993-147149-0021_dev_002_description.txt
+
+--------------------------------------------------------------------------------
+
+Mixture 2:
+  LibriSpeech: 2428-83705-0024.flac
+  DCASE: dev_029.wav
+
+  Speech description: a man speaking with a steady voice while reading from a book
+  DCASE description: a small gun is shooting with traffic in the background
+  Combined description: a man speaking with a steady voice while reading from a book while a small gun is shooting with traffic in the background
+
+  CLAP Similarity Scores:
+    Combined: 0.6220
+    Speech only: 0.4321
+    DCASE only: 0.4491
+    ✓ Combined description performs best
+
+  Output files:
+    Audio: mix_02_2428-83705-0024_dev_029.wav
+    Description: mix_02_2428-83705-0024_dev_029_description.txt
+
+--------------------------------------------------------------------------------
+
+Mixture 3:
+  LibriSpeech: 2086-149220-0031.flac
+  DCASE: dev_014.wav
+
+  Speech description: a man speaking with a well-articulated voice while reading aloud
+  DCASE description: a motorcycle is starting with water in the background
+  Combined description: a man speaking with a well-articulated voice while reading aloud while a motorcycle is starting with water in the background
+
+  CLAP Similarity Scores:
+    Combined: 0.7097
+    Speech only: 0.4044
+    DCASE only: 0.5835
+    ✓ Combined description performs best
+
+  Output files:
+    Audio: mix_03_2086-149220-0031_dev_014.wav
+    Description: mix_03_2086-149220-0031_dev_014_description.txt
+
+--------------------------------------------------------------------------------
+
+Mixture 4:
+  LibriSpeech: 1993-147149-0021.flac
+  DCASE: dev_060.wav
+
+  Speech description: a woman speaking with a clear voice while narrating a story
+  DCASE description: a tank is rolling with traffic in the background
+  Combined description: a woman speaking with a clear voice while narrating a story while a tank is rolling with traffic in the background
+
+  CLAP Similarity Scores:
+    Combined: 0.6636
+    Speech only: 0.5167
+    DCASE only: 0.4013
+    ✓ Combined description performs best
+
+  Output files:
+    Audio: mix_04_1993-147149-0021_dev_060.wav
+    Description: mix_04_1993-147149-0021_dev_060_description.txt
+
+--------------------------------------------------------------------------------
+
+Mixture 5:
+  LibriSpeech: 174-84280-0013.flac
+  DCASE: dev_048.wav
+
+  Speech description: a man speaking with a calm voice while reading from a book
+  DCASE description: a zipper is zipping with crowd in the background
+  Combined description: a man speaking with a calm voice while reading from a book while a zipper is zipping with crowd in the background
+
+  CLAP Similarity Scores:
+    Combined: 0.4386
+    Speech only: 0.3704
+    DCASE only: 0.3580
+    ✓ Combined description performs best
+
+  Output files:
+    Audio: mix_05_174-84280-0013_dev_048.wav
+    Description: mix_05_174-84280-0013_dev_048_description.txt
+
+--------------------------------------------------------------------------------
+
+Overall Statistics:
+  Combined descriptions - Mean: 0.6214, Std: 0.0956
+  Speech only - Mean: 0.4150, Std: 0.0579
+  DCASE only - Mean: 0.4800, Std: 0.0991
+
+  Combined description wins: 5/5 (100.0%)
