@@ -4,39 +4,90 @@ Calculate similarity between audio files and text descriptions using CLAP (Contr
 
 Supports both **Microsoft CLAP** and **LAION CLAP** backends.
 
+## 📁 Project Structure
+
+```
+clapclap/
+├── clap_similarity.py          # Main CLAP similarity calculation script
+├── scripts/                    # Utility scripts
+│   ├── run_clap.sh            # Easy-to-use wrapper script
+│   └── rebuild.sh             # Docker rebuild script
+├── data_sanity_checks/        # Dataset validation tests
+│   ├── evaluate_dcase.py      # DCASE dataset evaluation
+│   └── dcase_results.txt      # Evaluation results
+├── test_data/                 # Test datasets and examples
+│   ├── examples/              # Example audio and text files
+│   ├── dcase/                 # DCASE dataset samples (20 files)
+│   └── librispeech/           # LibriSpeech dataset samples (20 files)
+├── Dockerfile                 # Docker container definition
+├── docker-compose.yml         # Docker compose configuration
+└── requirements.txt           # Python dependencies
+```
+
 ## Prerequisites
 
 - Docker and Docker Compose installed
 - Docker daemon running
 
-## Quick Start
+## 🚀 Quick Start
 
-### 1. Build the Docker image (first time only)
+### Option 1: Using the Shell Script (Easiest)
+
+The `run_clap.sh` script makes it simple to run CLAP similarity calculations:
+
+```bash
+./scripts/run_clap.sh <audio_file> <text_file> [output_file]
+```
+
+**Example:**
+```bash
+./scripts/run_clap.sh test_data/examples/piano_and_beats.mp3 test_data/examples/positive_example.txt result.txt
+```
+
+Results are automatically saved to the specified output file (or `clap_result.txt` if not specified).
+
+### Option 2: Using Docker Compose Directly
+
+**First time: Build the Docker image**
 
 ```bash
 docker-compose build
 ```
 
-This will download all dependencies and set up the environment. The CLAP models will be downloaded on first run and cached for future use.
-
-### 2. Run similarity calculation
-
-**Using Microsoft CLAP (default, recommended):**
+**Run similarity calculation:**
 
 ```bash
-docker-compose run --rm clap-run python clap_similarity.py /app/data/piano_and_beats.mp3 /app/data/description.txt
+docker-compose run --rm clap-run python clap_similarity.py \
+    /app/test_data/examples/piano_and_beats.mp3 \
+    /app/test_data/examples/positive_example.txt \
+    --no-cuda
 ```
 
-**Using LAION CLAP:**
+### Option 3: Using Python Directly (No Docker)
 
 ```bash
-docker-compose run --rm clap-run python clap_similarity.py /app/data/piano_and_beats.mp3 /app/data/description.txt --backend laion
+python clap_similarity.py <audio_file> <text_file> [--backend msclap|laion] [--no-cuda]
 ```
 
-**CPU-only mode (disable CUDA):**
+## 📊 Dataset Validation
+
+Evaluate CLAP performance on test datasets:
 
 ```bash
-docker-compose run --rm clap-run python clap_similarity.py /app/data/piano_and_beats.mp3 /app/data/description.txt --no-cuda
+# DCASE dataset evaluation (35 samples)
+docker-compose run --rm clap-run python data_sanity_checks/evaluate_dcase.py
+```
+
+Results are saved to `data_sanity_checks/dcase_results.txt` with:
+- Individual similarity scores for each sample
+- Summary statistics (mean, std, min, max, median)
+
+**Example Results:**
+```
+Mean similarity: 0.5197
+Std deviation: 0.0682
+Min similarity: 0.3989
+Max similarity: 0.6852
 ```
 
 ## Backend Comparison
@@ -45,70 +96,6 @@ docker-compose run --rm clap-run python clap_similarity.py /app/data/piano_and_b
 |---------|-----------|----------------|-------------|
 | **Microsoft CLAP** | ~600MB | Faster | Recommended for most use cases |
 | **LAION CLAP** | ~1.8GB | Slower | Research-focused |
-
-## Model Persistence
-
-The CLAP models are downloaded once and stored in a Docker volume (`clap-model-cache`). They persist across container restarts, so you won't need to re-download them.
-
-### Rebuild with fresh model cache
-
-To force a rebuild and clear the cached models:
-
-```bash
-./rebuild.sh
-```
-
-Or manually:
-
-```bash
-# Remove the volume
-docker volume rm clap-model-cache
-
-# Rebuild the image
-docker-compose build --no-cache
-```
-
-## Usage Examples
-
-### Microsoft CLAP (Default)
-
-```bash
-# Compare audio with positive example
-docker-compose run --rm clap-run python clap_similarity.py \
-  /app/data/piano_and_beats.mp3 \
-  /app/data/positive_example.txt
-
-# Compare audio with negative example
-docker-compose run --rm clap-run python clap_similarity.py \
-  /app/data/piano_and_beats.mp3 \
-  /app/data/negative_example1.txt
-```
-
-### LAION CLAP
-
-```bash
-# Use LAION backend
-docker-compose run --rm clap-run python clap_similarity.py \
-  /app/data/piano_and_beats.mp3 \
-  /app/data/description.txt \
-  --backend laion
-```
-
-### Compare backends
-
-```bash
-# Test with Microsoft CLAP
-docker-compose run --rm clap-run python clap_similarity.py \
-  /app/data/piano_and_beats.mp3 \
-  /app/data/description.txt \
-  --backend msclap
-
-# Test with LAION CLAP
-docker-compose run --rm clap-run python clap_similarity.py \
-  /app/data/piano_and_beats.mp3 \
-  /app/data/description.txt \
-  --backend laion
-```
 
 ## Command-Line Options
 
@@ -126,50 +113,54 @@ Optional arguments:
   -h, --help           Show help message
 ```
 
-## File Structure
-
-- `data/` - Directory containing your audio and text files
-- `clap_similarity.py` - Main script for calculating similarity
-- `Dockerfile` - Container definition
-- `docker-compose.yml` - Orchestration configuration
-- `requirements.txt` - Python dependencies
-- `rebuild.sh` - Script to rebuild with fresh cache
-
 ## Supported Audio Formats
 
 - MP3, WAV, FLAC, OGG, and other formats supported by librosa
 
 ## Text File Format
 
-Text files should contain a single description of the audio content, for example:
+Text files should contain a single description of the audio content:
 
 ```
-piano melody with drum beats in the background
+piano melody with rhythmic beats and electronic drums
 ```
 
 ## Similarity Scores
 
-- Scores range from **-1 to 1**
+- Scores range from **-1 to 1** (cosine similarity)
 - Higher values indicate greater similarity
 - Typical ranges:
   - **> 0.3**: High similarity
   - **0.1 to 0.3**: Moderate similarity
   - **< 0.1**: Low similarity
 
+## Model Persistence
+
+CLAP models are downloaded once and stored in a Docker volume (`clap-model-cache`). They persist across container restarts.
+
+### Rebuild with fresh model cache
+
+```bash
+./scripts/rebuild.sh
+```
+
+Or manually:
+
+```bash
+docker volume rm clap-model-cache
+docker-compose build --no-cache
+```
+
 ## Troubleshooting
 
 ### Models downloading slowly
-
-The models are large (600MB - 1.8GB). First run will take time. Subsequent runs use the cached models.
+The models are large (600MB - 1.8GB). First run will take time. Subsequent runs use cached models.
 
 ### Out of memory errors
-
 Use CPU mode with `--no-cuda` flag.
 
 ### Docker volume issues
-
 Remove and recreate the volume:
-
 ```bash
 docker volume rm clap-model-cache
 docker-compose build
@@ -177,7 +168,7 @@ docker-compose build
 
 ## Notes
 
-- Audio files are mounted read-only from the `data/` directory
 - Model cache persists in Docker volume `clap-model-cache`
-- Microsoft CLAP is recommended for most users (faster downloads, good performance)
-- LAION CLAP is recommended for research purposes or when you need the specific model variant
+- Microsoft CLAP is recommended for most users (faster, good performance)
+- LAION CLAP is recommended for research or specific model requirements
+- All test data and examples are included in `test_data/` directory
