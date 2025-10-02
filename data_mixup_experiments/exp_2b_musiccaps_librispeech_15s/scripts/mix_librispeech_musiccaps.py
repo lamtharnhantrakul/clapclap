@@ -1,0 +1,296 @@
+#!/usr/bin/env python3
+"""
+Mix LibriSpeech and MusicCaps audio files with 15-second standardization.
+Creates audio mixtures and combined text descriptions for CLAP evaluation.
+"""
+
+import sys
+import argparse
+import random
+from pathlib import Path
+import numpy as np
+import soundfile as sf
+import librosa
+
+# Add parent directory to path to import clap_similarity
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+
+from clap_similarity import calculate_similarity_msclap
+
+# Paths
+SCRIPT_DIR = Path(__file__).parent
+TEST_DATA_DIR = SCRIPT_DIR.parent.parent.parent / "test_data"
+LIBRISPEECH_DIR = TEST_DATA_DIR / "librispeech"
+MUSICCAPS_DIR = TEST_DATA_DIR / "music_caps"
+OUTPUT_DIR = SCRIPT_DIR.parent / "output"  # All outputs go to experiment_1/output/
+
+TARGET_DURATION = 15  # seconds
+TARGET_SR = 16000
+
+def load_and_resample(audio_path, target_sr=16000):
+    """Load audio file and resample to target sample rate."""
+    audio, sr = sf.read(audio_path)
+    if sr != target_sr:
+        audio = librosa.resample(audio, orig_sr=sr, target_sr=target_sr)
+    return audio, target_sr
+
+def standardize_to_15s(audio, sr, target_duration=15):
+    """
+    Standardize audio to exactly 15 seconds.
+
+    Args:
+        audio: Audio array
+        sr: Sample rate
+        target_duration: Target duration in seconds (default: 15)
+
+    Returns:
+        Audio array of exactly target_duration seconds
+    """
+    target_samples = int(target_duration * sr)
+    current_samples = len(audio)
+
+    if current_samples > target_samples:
+        # Take a random crop if longer than target
+        max_start = current_samples - target_samples
+        start = random.randint(0, max_start)
+        return audio[start:start + target_samples]
+    elif current_samples < target_samples:
+        # Pad at the end with zeros if shorter than target
+        padding = target_samples - current_samples
+        return np.pad(audio, (0, padding), mode='constant', constant_values=0)
+    else:
+        return audio
+
+def mix_audio(audio1, audio2, mix_ratio=0.5):
+    """
+    Mix two audio signals of the same length.
+
+    Args:
+        audio1: First audio array
+        audio2: Second audio array
+        mix_ratio: Ratio for audio1 (1-mix_ratio for audio2). Default 0.5 = equal mix
+
+    Returns:
+        Mixed audio array
+    """
+    # Both should already be the same length from standardization
+    assert len(audio1) == len(audio2), "Audio lengths must match"
+
+    # Mix with specified ratio
+    mixed = mix_ratio * audio1 + (1 - mix_ratio) * audio2
+
+    # Normalize to prevent clipping
+    max_val = np.max(np.abs(mixed))
+    if max_val > 0:
+        mixed = mixed / max_val * 0.95
+
+    return mixed
+
+def combine_descriptions_natural(speech_desc, musiccaps_desc):
+    """
+    Combine speech and MusicCaps descriptions into natural English.
+
+    Args:
+        speech_desc: LibriSpeech description (e.g., "a man speaking...")
+        musiccaps_desc: MusicCaps description (e.g., "a buzzer is ringing...")
+
+    Returns:
+        Naturally combined description
+    """
+    # Extract key components from descriptions
+    # Speech descriptions usually start with "a [gender] speaking/person speaking"
+    # MusicCaps descriptions describe ambient sounds
+
+    # Clean up descriptions
+    speech = speech_desc.strip()
+    ambient = musiccaps_desc.strip()
+
+    # Remove trailing periods for easier combination
+    if speech.endswith('.'):
+        speech = speech[:-1]
+    if ambient.endswith('.'):
+        ambient = ambient[:-1]
+
+    # Create natural combination
+    # Pattern: "[speech description] while [ambient sound]"
+    combined = f"{speech} while {ambient}"
+
+    return combined
+
+def run_mixup_experiment(num_mixtures=5):
+    """
+    Run the LibriSpeech + MusicCaps mixup experiment with 15-second standardization.
+
+    Args:
+        num_mixtures: Number of random audio mixtures to create (default: 5)
+    """
+
+    print("=" * 80)
+    print(f"LibriSpeech + MusicCaps Audio Mixup Experiment (15s, {num_mixtures} mixtures)")
+    print("=" * 80)
+
+    # Get all available files
+    librispeech_files = sorted(LIBRISPEECH_DIR.glob("*.flac"))
+    musiccaps_files = sorted(MUSICCAPS_DIR.glob("*.wav"))
+
+    print(f"\nAvailable files:")
+    print(f"  LibriSpeech: {len(librispeech_files)} files")
+    print(f"  MusicCaps: {len(musiccaps_files)} files")
+
+    # Randomly sample pairs
+    random.seed(42)  # For reproducibility
+
+    # Create random pairs
+    pairs = []
+    for i in range(num_mixtures):
+        librispeech_file = random.choice(librispeech_files)
+        musiccaps_file = random.choice(musiccaps_files)
+        pairs.append((librispeech_file, musiccaps_file, i + 1))
+
+    print(f"\nGenerating {num_mixtures} random mixtures (standardized to {TARGET_DURATION}s)...")
+    print("=" * 80)
+
+    # Initialize CLAP model once
+    import msclap
+    model = msclap.CLAP(version='2023', use_cuda=False)
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Store results for summary
+    all_results = []
+
+    for librispeech_path, musiccaps_path, mix_num in pairs:
+        print(f"\n[Mixture {mix_num}/{num_mixtures}]")
+        print(f"  LibriSpeech: {librispeech_path.name}")
+        print(f"  MusicCaps: {musiccaps_path.name}")
+
+        # Load audio files
+        librispeech_audio, sr1 = load_and_resample(librispeech_path)
+        musiccaps_audio, sr2 = load_and_resample(musiccaps_path)
+
+        # Standardize both to 15 seconds
+        librispeech_audio = standardize_to_15s(librispeech_audio, sr1, TARGET_DURATION)
+        musiccaps_audio = standardize_to_15s(musiccaps_audio, sr2, TARGET_DURATION)
+
+        # Mix audio
+        mixed_audio = mix_audio(librispeech_audio, musiccaps_audio, mix_ratio=0.5)
+
+        # Create output filenames with mixture number
+        mix_name = f"mix_{mix_num:02d}_{librispeech_path.stem}_{musiccaps_path.stem}"
+        mixed_audio_path = OUTPUT_DIR / f"{mix_name}.wav"
+
+        # Save mixed audio
+        sf.write(mixed_audio_path, mixed_audio, sr1)
+
+        # Load text descriptions
+        librispeech_desc_path = LIBRISPEECH_DIR / f"{librispeech_path.stem}_description.txt"
+        musiccaps_desc_path = MUSICCAPS_DIR / f"{musiccaps_path.stem}_description.txt"
+
+        with open(librispeech_desc_path, 'r') as f:
+            librispeech_desc = f.read().strip()
+        with open(musiccaps_desc_path, 'r') as f:
+            musiccaps_desc = f.read().strip()
+
+        # Combine descriptions naturally
+        combined_desc = combine_descriptions_natural(librispeech_desc, musiccaps_desc)
+
+        # Save combined description
+        combined_desc_path = OUTPUT_DIR / f"{mix_name}_description.txt"
+        with open(combined_desc_path, 'w') as f:
+            f.write(combined_desc)
+
+        print(f"  Combined: '{combined_desc}'")
+
+        # Calculate CLAP similarity
+        audio_embeddings = model.get_audio_embeddings([str(mixed_audio_path)], resample=True)
+
+        # Test against combined description
+        text_embeddings_combined = model.get_text_embeddings([combined_desc])
+        audio_norm = audio_embeddings / np.linalg.norm(audio_embeddings, axis=1, keepdims=True)
+        text_norm_combined = text_embeddings_combined / np.linalg.norm(text_embeddings_combined, axis=1, keepdims=True)
+        similarity_combined = float((audio_norm @ text_norm_combined.T)[0][0])
+
+        # Test against individual descriptions
+        text_embeddings_speech = model.get_text_embeddings([librispeech_desc])
+        text_norm_speech = text_embeddings_speech / np.linalg.norm(text_embeddings_speech, axis=1, keepdims=True)
+        similarity_speech = float((audio_norm @ text_norm_speech.T)[0][0])
+
+        text_embeddings_dcase = model.get_text_embeddings([musiccaps_desc])
+        text_norm_dcase = text_embeddings_dcase / np.linalg.norm(text_embeddings_dcase, axis=1, keepdims=True)
+        similarity_musiccaps = float((audio_norm @ text_norm_dcase.T)[0][0])
+
+        print(f"  CLAP Scores - Combined: {similarity_combined:.4f} | Speech: {similarity_speech:.4f} | MusicCaps: {similarity_musiccaps:.4f}")
+
+        # Store results
+        result = {
+            'mix_num': mix_num,
+            'librispeech_file': librispeech_path.name,
+            'musiccaps_file': musiccaps_path.name,
+            'librispeech_desc': librispeech_desc,
+            'musiccaps_desc': musiccaps_desc,
+            'combined_desc': combined_desc,
+            'similarity_combined': similarity_combined,
+            'similarity_speech': similarity_speech,
+            'similarity_musiccaps': similarity_musiccaps,
+            'audio_path': mixed_audio_path,
+            'desc_path': combined_desc_path
+        }
+        all_results.append(result)
+
+    # Save comprehensive results
+    print(f"\n{'=' * 80}")
+    print("Saving comprehensive results...")
+    results_path = OUTPUT_DIR / "experiment_summary.txt"
+
+    with open(results_path, 'w') as f:
+        f.write("LibriSpeech + MusicCaps Audio Mixup Experiment (15s) - Summary\n")
+        f.write("=" * 80 + "\n\n")
+        f.write(f"Total mixtures created: {num_mixtures}\n")
+        f.write(f"Audio duration: {TARGET_DURATION} seconds (standardized)\n\n")
+
+        for result in all_results:
+            f.write(f"Mixture {result['mix_num']}:\n")
+            f.write(f"  LibriSpeech: {result['librispeech_file']}\n")
+            f.write(f"  MusicCaps: {result['musiccaps_file']}\n\n")
+            f.write(f"  Speech description: {result['librispeech_desc']}\n")
+            f.write(f"  MusicCaps description: {result['musiccaps_desc']}\n")
+            f.write(f"  Combined description: {result['combined_desc']}\n\n")
+            f.write(f"  CLAP Similarity Scores:\n")
+            f.write(f"    Combined: {result['similarity_combined']:.4f}\n")
+            f.write(f"    Speech only: {result['similarity_speech']:.4f}\n")
+            f.write(f"    MusicCaps only: {result['similarity_musiccaps']:.4f}\n")
+
+            if result['similarity_combined'] > max(result['similarity_speech'], result['similarity_musiccaps']):
+                f.write(f"    ✓ Combined description performs best\n")
+            else:
+                f.write(f"    ⚠ Individual description performs better\n")
+
+            f.write(f"\n  Output files:\n")
+            f.write(f"    Audio: {result['audio_path'].name}\n")
+            f.write(f"    Description: {result['desc_path'].name}\n")
+            f.write("\n" + "-" * 80 + "\n\n")
+
+        # Calculate statistics
+        combined_scores = [r['similarity_combined'] for r in all_results]
+        speech_scores = [r['similarity_speech'] for r in all_results]
+        musiccaps_scores = [r['similarity_musiccaps'] for r in all_results]
+
+        f.write("Overall Statistics:\n")
+        f.write(f"  Combined descriptions - Mean: {np.mean(combined_scores):.4f}, Std: {np.std(combined_scores):.4f}\n")
+        f.write(f"  Speech only - Mean: {np.mean(speech_scores):.4f}, Std: {np.std(speech_scores):.4f}\n")
+        f.write(f"  MusicCaps only - Mean: {np.mean(musiccaps_scores):.4f}, Std: {np.std(musiccaps_scores):.4f}\n\n")
+
+        combined_wins = sum(1 for r in all_results if r['similarity_combined'] > max(r['similarity_speech'], r['similarity_musiccaps']))
+        f.write(f"  Combined description wins: {combined_wins}/{num_mixtures} ({100*combined_wins/num_mixtures:.1f}%)\n")
+
+    print(f"✓ Results saved to: {results_path}")
+    print(f"✓ Created {num_mixtures} audio mixtures in: {OUTPUT_DIR}")
+    print("=" * 80)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Mix LibriSpeech and MusicCaps audio files (15s)')
+    parser.add_argument('--num-mixtures', type=int, default=5,
+                        help='Number of random audio mixtures to create (default: 5)')
+
+    args = parser.parse_args()
+    run_mixup_experiment(args.num_mixtures)
