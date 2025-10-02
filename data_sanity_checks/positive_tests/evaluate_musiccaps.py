@@ -84,7 +84,7 @@ def evaluate_musiccaps():
     print("\n" + "\n".join(summary))
 
     # Write results to file
-    output_file = SCRIPT_DIR / "musiccaps_results.txt"
+    output_file = SCRIPT_DIR.parent / "results" / "positive_tests" / "musiccaps_results.txt"
     with open(output_file, 'w') as f:
         f.write(f"MusicCaps CLAP Similarity Evaluation Results\n")
         f.write(f"Evaluating {len(audio_files)} samples\n")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Evaluate CLAP similarity scores for DCASE test dataset.
-Calculates similarity between each audio file and its corresponding text label.
+Evaluate CLAP similarity scores for LibriSpeech test dataset.
+Calculates similarity between each audio file and its corresponding description.
 """
 
 import sys
@@ -15,30 +15,30 @@ from clap_similarity import calculate_similarity_msclap
 
 # Dataset path - use environment-aware path
 SCRIPT_DIR = Path(__file__).parent
-DCASE_DIR = SCRIPT_DIR.parent / "test_data" / "dcase"
+LIBRISPEECH_DIR = SCRIPT_DIR.parent / "test_data" / "librispeech"
 
-def evaluate_dcase():
-    """Evaluate CLAP similarity for all DCASE samples."""
+def evaluate_librispeech():
+    """Evaluate CLAP similarity for all LibriSpeech samples."""
 
     # Get all audio files
-    audio_files = sorted(DCASE_DIR.glob("*.wav"))
+    audio_files = sorted(LIBRISPEECH_DIR.glob("*.flac"))
 
     if not audio_files:
-        print("Error: No audio files found in DCASE directory")
+        print("Error: No audio files found in LibriSpeech directory")
         return
 
-    print(f"Evaluating {len(audio_files)} DCASE samples...")
+    print(f"Evaluating {len(audio_files)} LibriSpeech samples...")
     print("=" * 80)
 
     scores = []
     results = []
 
     for audio_file in audio_files:
-        # Get corresponding text file with _description suffix
+        # Get corresponding description file with _description suffix
         text_file = audio_file.parent / f"{audio_file.stem}_description.txt"
 
         if not text_file.exists():
-            print(f"Warning: No text file found for {audio_file.name}")
+            print(f"Warning: No description file found for {audio_file.name}")
             continue
 
         # Read text description
@@ -84,9 +84,9 @@ def evaluate_dcase():
     print("\n" + "\n".join(summary))
 
     # Write results to file
-    output_file = SCRIPT_DIR / "dcase_results.txt"
+    output_file = SCRIPT_DIR.parent / "results" / "positive_tests" / "librispeech_results.txt"
     with open(output_file, 'w') as f:
-        f.write(f"DCASE CLAP Similarity Evaluation Results\n")
+        f.write(f"LibriSpeech CLAP Similarity Evaluation Results\n")
         f.write(f"Evaluating {len(audio_files)} samples\n")
         f.write("=" * 80 + "\n\n")
 
@@ -102,4 +102,4 @@ def evaluate_dcase():
     return scores, summary
 
 if __name__ == "__main__":
-    evaluate_dcase()
+    evaluate_librispeech()

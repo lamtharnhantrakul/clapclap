@@ -2,6 +2,30 @@
 
 This directory contains validation scripts and results for testing the CLAP (Contrastive Language-Audio Pretraining) model. These sanity checks ensure that CLAP correctly matches related audio-text pairs and rejects unrelated ones.
 
+## Directory Structure
+
+```
+data_sanity_checks/
+├── README.md                          # This file
+├── positive_tests/                    # Scripts for positive match validation
+│   ├── evaluate_dcase.py             # Test DCASE audio events
+│   ├── evaluate_librispeech.py       # Test speech samples
+│   └── evaluate_musiccaps.py         # Test music samples
+├── negative_tests/                    # Scripts for negative sample validation
+│   ├── test_negative_samples_dcase.py        # DCASE description vs other audio
+│   ├── test_negative_samples_librispeech.py  # Speech description vs other audio
+│   └── test_negative_samples_musiccaps.py    # Music description vs other audio
+└── results/                           # Test output files
+    ├── positive_tests/                # Positive match results
+    │   ├── dcase_results.txt
+    │   ├── librispeech_results.txt
+    │   └── musiccaps_results.txt
+    └── negative_tests/                # Negative match results
+        ├── negative_sample_test_results_dcase.txt
+        ├── negative_sample_librispeech_test_results.txt
+        └── negative_sample_test_results_musiccaps.txt
+```
+
 ## Purpose
 
 These scripts verify that:
@@ -11,48 +35,48 @@ These scripts verify that:
 
 ## Evaluation Scripts
 
-### Positive Match Tests
+### Positive Match Tests (positive_tests/)
 
 These scripts test CLAP on matching audio-description pairs within each dataset:
 
 #### `evaluate_dcase.py`
 - **Tests**: 35 DCASE audio event samples against their descriptions
 - **Expected Scores**: High similarity (0.40-0.69, mean ~0.52)
-- **Output**: `dcase_results.txt`
+- **Output**: `results/positive_tests/dcase_results.txt`
 - **Example Match**: "buzzer ringing" audio → "a buzzer is ringing with water in the background"
 
 #### `evaluate_librispeech.py`
 - **Tests**: 20 LibriSpeech speech samples against their audio descriptions
 - **Expected Scores**: High similarity (0.43-0.67, mean ~0.54)
-- **Output**: `librispeech_results.txt`
+- **Output**: `results/positive_tests/librispeech_results.txt`
 - **Example Match**: Male speech audio → "a man speaking with a well-articulated voice while reading from a book"
 
 #### `evaluate_musiccaps.py`
 - **Tests**: 5 MusicCaps music samples against their descriptions
 - **Expected Scores**: Moderate-high similarity (0.21-0.52, mean ~0.38)
-- **Output**: `musiccaps_results.txt`
+- **Output**: `results/positive_tests/musiccaps_results.txt`
 - **Example Match**: Ballad audio → "ballad song with sustained strings, mellow piano melody and soft female vocal"
 
-### Negative Sample Tests
+### Negative Sample Tests (negative_tests/)
 
 These scripts test CLAP on mismatched audio-description pairs across different datasets:
 
-#### `test_negative_samples.py` (DCASE description)
+#### `test_negative_samples_dcase.py` (DCASE description)
 - **Tests**: DCASE audio event description against LibriSpeech (speech) and MusicCaps (music) audio
 - **Expected Scores**: Low similarity (mean ~0.17)
-- **Output**: `negative_sample_test_results.txt`
+- **Output**: `results/negative_tests/negative_sample_test_results_dcase.txt`
 - **Validates**: Audio event descriptions should NOT match speech or music
 
 #### `test_negative_samples_musiccaps.py` (MusicCaps description)
 - **Tests**: Music description against LibriSpeech (speech) and DCASE (audio events) audio
 - **Expected Scores**: Very low similarity (mean ~0.09)
-- **Output**: `negative_sample_musiccaps_test_results.txt`
+- **Output**: `results/negative_tests/negative_sample_test_results_musiccaps.txt`
 - **Validates**: Music descriptions should NOT match speech or audio events
 
 #### `test_negative_samples_librispeech.py` (LibriSpeech description)
 - **Tests**: Speech description against MusicCaps (music) and DCASE (audio events) audio
 - **Expected Scores**: Low similarity (mean ~0.06)
-- **Output**: `negative_sample_librispeech_test_results.txt`
+- **Output**: `results/negative_tests/negative_sample_librispeech_test_results.txt`
 - **Validates**: Speech descriptions should NOT match music or audio events
 
 ## Result Files
@@ -85,14 +109,14 @@ All scripts should be run in Docker to ensure consistent environment:
 
 ```bash
 # Positive match tests
-docker-compose run --rm clap-run python3 /app/data_sanity_checks/evaluate_dcase.py
-docker-compose run --rm clap-run python3 /app/data_sanity_checks/evaluate_librispeech.py
-docker-compose run --rm clap-run python3 /app/data_sanity_checks/evaluate_musiccaps.py
+docker-compose run --rm clap-run python3 /app/data_sanity_checks/positive_tests/evaluate_dcase.py
+docker-compose run --rm clap-run python3 /app/data_sanity_checks/positive_tests/evaluate_librispeech.py
+docker-compose run --rm clap-run python3 /app/data_sanity_checks/positive_tests/evaluate_musiccaps.py
 
 # Negative sample tests
-docker-compose run --rm clap-run python3 /app/data_sanity_checks/test_negative_samples.py
-docker-compose run --rm clap-run python3 /app/data_sanity_checks/test_negative_samples_musiccaps.py
-docker-compose run --rm clap-run python3 /app/data_sanity_checks/test_negative_samples_librispeech.py
+docker-compose run --rm clap-run python3 /app/data_sanity_checks/negative_tests/test_negative_samples_dcase.py
+docker-compose run --rm clap-run python3 /app/data_sanity_checks/negative_tests/test_negative_samples_musiccaps.py
+docker-compose run --rm clap-run python3 /app/data_sanity_checks/negative_tests/test_negative_samples_librispeech.py
 ```
 
 ## Understanding the Scores
