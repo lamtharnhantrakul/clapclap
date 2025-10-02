@@ -1,0 +1,75 @@
+NEGATIVE SAMPLE TEST RESULTS (LibriSpeech Description)
+Testing LibriSpeech description against unrelated audio
+================================================================================
+
+MusicCaps/-0Gj8-vB1q4.wav: 0.0614
+MusicCaps/-0SdAVK79lg.wav: 0.1815
+MusicCaps/-0vPFx-wRRI.wav: 0.2653
+MusicCaps/-1LrH01Ei1w.wav: 0.2584
+MusicCaps/-1OlgJWehn8.wav: 0.2621
+DCASE/dev_001.wav: 0.0060
+DCASE/dev_002.wav: 0.0872
+DCASE/dev_003.wav: 0.0828
+DCASE/dev_005.wav: 0.0224
+DCASE/dev_007.wav: -0.0429
+DCASE/dev_011.wav: 0.0908
+DCASE/dev_012.wav: 0.0635
+DCASE/dev_013.wav: 0.0807
+DCASE/dev_014.wav: 0.0220
+DCASE/dev_015.wav: 0.0746
+DCASE/dev_017.wav: -0.0269
+DCASE/dev_019.wav: 0.1958
+DCASE/dev_020.wav: 0.0063
+DCASE/dev_021.wav: 0.0378
+DCASE/dev_022.wav: 0.1881
+DCASE/dev_029.wav: -0.0140
+DCASE/dev_030.wav: 0.0059
+DCASE/dev_031.wav: 0.1893
+DCASE/dev_032.wav: 0.0360
+DCASE/dev_033.wav: 0.0545
+DCASE/dev_035.wav: -0.0199
+DCASE/dev_036.wav: 0.0128
+DCASE/dev_037.wav: 0.0205
+DCASE/dev_039.wav: -0.0317
+DCASE/dev_041.wav: 0.1105
+DCASE/dev_043.wav: -0.0049
+DCASE/dev_044.wav: 0.0528
+DCASE/dev_048.wav: 0.0883
+DCASE/dev_049.wav: 0.1487
+DCASE/dev_050.wav: 0.0041
+DCASE/dev_051.wav: 0.0467
+DCASE/dev_054.wav: 0.0331
+DCASE/dev_056.wav: -0.0394
+DCASE/dev_058.wav: -0.0008
+DCASE/dev_060.wav: -0.0142
+
+================================================================================
+NEGATIVE SAMPLE TEST (LibriSpeech) - SUMMARY STATISTICS
+================================================================================
+Test description: 'a man speaking with a well-articulated voice while reading from a book'
+Source: 174-168635-0007_description.txt
+
+Total audio files tested: 40
+  - MusicCaps: 5
+  - DCASE: 35
+
+Overall Statistics:
+  Mean similarity: 0.0649
+  Std deviation: 0.0843
+  Min similarity: -0.0429
+  Max similarity: 0.2653
+  Median similarity: 0.0423
+
+MusicCaps Statistics:
+  Mean: 0.2057
+  Min: 0.0614
+  Max: 0.2653
+
+DCASE Statistics:
+  Mean: 0.0448
+  Min: -0.0429
+  Max: 0.1958
+
+Expected: Low scores (< 0.1) since speech descriptions
+          are unrelated to music (MusicCaps) and audio events (DCASE)
+================================================================================

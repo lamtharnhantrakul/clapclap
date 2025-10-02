@@ -1,0 +1,90 @@
+NEGATIVE SAMPLE TEST RESULTS (MusicCaps Description)
+Testing MusicCaps description against unrelated audio
+================================================================================
+
+LibriSpeech/174-168635-0007.flac: 0.1176
+LibriSpeech/174-50561-0015.flac: 0.1542
+LibriSpeech/174-84280-0013.flac: 0.0935
+LibriSpeech/1993-147149-0021.flac: 0.2674
+LibriSpeech/2035-152373-0014.flac: 0.1883
+LibriSpeech/2078-142845-0041.flac: 0.0968
+LibriSpeech/2086-149220-0000.flac: 0.0315
+LibriSpeech/2086-149220-0031.flac: 0.0755
+LibriSpeech/2428-83705-0024.flac: -0.0130
+LibriSpeech/251-118436-0016.flac: 0.2850
+LibriSpeech/251-136532-0001.flac: 0.1165
+LibriSpeech/2902-9006-0017.flac: -0.0145
+LibriSpeech/2902-9006-0018.flac: -0.0196
+LibriSpeech/3170-137482-0019.flac: 0.0264
+LibriSpeech/5338-24615-0007.flac: 0.2260
+LibriSpeech/5536-43358-0012.flac: 0.1093
+LibriSpeech/5694-64025-0018.flac: 0.0217
+LibriSpeech/777-126732-0004.flac: 0.1149
+LibriSpeech/777-126732-0015.flac: -0.0301
+LibriSpeech/8297-275154-0015.flac: 0.1216
+DCASE/dev_001.wav: 0.0169
+DCASE/dev_002.wav: 0.0454
+DCASE/dev_003.wav: 0.0879
+DCASE/dev_005.wav: 0.0068
+DCASE/dev_007.wav: 0.0199
+DCASE/dev_011.wav: 0.0646
+DCASE/dev_012.wav: 0.0494
+DCASE/dev_013.wav: 0.1528
+DCASE/dev_014.wav: 0.0605
+DCASE/dev_015.wav: 0.1208
+DCASE/dev_017.wav: 0.0938
+DCASE/dev_019.wav: 0.1012
+DCASE/dev_020.wav: -0.0104
+DCASE/dev_021.wav: -0.0444
+DCASE/dev_022.wav: 0.1321
+DCASE/dev_029.wav: 0.0415
+DCASE/dev_030.wav: 0.0833
+DCASE/dev_031.wav: 0.0667
+DCASE/dev_032.wav: 0.1487
+DCASE/dev_033.wav: 0.1633
+DCASE/dev_035.wav: 0.1022
+DCASE/dev_036.wav: 0.0477
+DCASE/dev_037.wav: 0.1541
+DCASE/dev_039.wav: 0.0723
+DCASE/dev_041.wav: 0.1650
+DCASE/dev_043.wav: 0.1014
+DCASE/dev_044.wav: 0.0645
+DCASE/dev_048.wav: 0.1299
+DCASE/dev_049.wav: 0.1043
+DCASE/dev_050.wav: 0.1679
+DCASE/dev_051.wav: 0.1530
+DCASE/dev_054.wav: 0.1076
+DCASE/dev_056.wav: 0.1587
+DCASE/dev_058.wav: -0.0124
+DCASE/dev_060.wav: 0.0844
+
+================================================================================
+NEGATIVE SAMPLE TEST (MusicCaps) - SUMMARY STATISTICS
+================================================================================
+Test description: 'The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services.'
+Source: -0Gj8-vB1q4_description.txt
+
+Total audio files tested: 55
+  - LibriSpeech: 20
+  - DCASE: 35
+
+Overall Statistics:
+  Mean similarity: 0.0904
+  Std deviation: 0.0707
+  Min similarity: -0.0444
+  Max similarity: 0.2850
+  Median similarity: 0.0938
+
+LibriSpeech Statistics:
+  Mean: 0.0985
+  Min: -0.0301
+  Max: 0.2850
+
+DCASE Statistics:
+  Mean: 0.0858
+  Min: -0.0444
+  Max: 0.1679
+
+Expected: Low scores (< 0.1) since music descriptions
+          are unrelated to speech (LibriSpeech) and audio events (DCASE)
+================================================================================

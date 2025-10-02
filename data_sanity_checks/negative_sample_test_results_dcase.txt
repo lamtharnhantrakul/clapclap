@@ -1,0 +1,60 @@
+NEGATIVE SAMPLE TEST RESULTS
+Testing DCASE description against unrelated audio
+================================================================================
+
+LibriSpeech/174-168635-0007.flac: 0.0744
+LibriSpeech/174-50561-0015.flac: 0.1507
+LibriSpeech/174-84280-0013.flac: 0.1198
+LibriSpeech/1993-147149-0021.flac: 0.1441
+LibriSpeech/2035-152373-0014.flac: 0.1621
+LibriSpeech/2078-142845-0041.flac: 0.1265
+LibriSpeech/2086-149220-0000.flac: 0.2025
+LibriSpeech/2086-149220-0031.flac: 0.2177
+LibriSpeech/2428-83705-0024.flac: 0.1307
+LibriSpeech/251-118436-0016.flac: 0.1058
+LibriSpeech/251-136532-0001.flac: 0.1678
+LibriSpeech/2902-9006-0017.flac: 0.1971
+LibriSpeech/2902-9006-0018.flac: 0.1929
+LibriSpeech/3170-137482-0019.flac: 0.1152
+LibriSpeech/5338-24615-0007.flac: 0.2001
+LibriSpeech/5536-43358-0012.flac: 0.0814
+LibriSpeech/5694-64025-0018.flac: 0.0926
+LibriSpeech/777-126732-0004.flac: 0.1382
+LibriSpeech/777-126732-0015.flac: 0.1609
+LibriSpeech/8297-275154-0015.flac: 0.0894
+MusicCaps/-0Gj8-vB1q4.wav: 0.2328
+MusicCaps/-0SdAVK79lg.wav: 0.1608
+MusicCaps/-0vPFx-wRRI.wav: 0.2590
+MusicCaps/-1LrH01Ei1w.wav: 0.2410
+MusicCaps/-1OlgJWehn8.wav: 0.3714
+
+================================================================================
+NEGATIVE SAMPLE TEST - SUMMARY STATISTICS
+================================================================================
+Test description: 'a buzzer is ringing with water in the background'
+Source: dev_001_description.txt
+
+Total audio files tested: 25
+  - LibriSpeech: 20
+  - MusicCaps: 5
+
+Overall Statistics:
+  Mean similarity: 0.1654
+  Std deviation: 0.0655
+  Min similarity: 0.0744
+  Max similarity: 0.3714
+  Median similarity: 0.1608
+
+LibriSpeech Statistics:
+  Mean: 0.1435
+  Min: 0.0744
+  Max: 0.2177
+
+MusicCaps Statistics:
+  Mean: 0.2530
+  Min: 0.1608
+  Max: 0.3714
+
+Expected: Low scores (< 0.1) since DCASE audio event descriptions
+          are unrelated to speech (LibriSpeech) and music (MusicCaps)
+================================================================================

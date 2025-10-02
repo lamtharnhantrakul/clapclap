@@ -1,0 +1,35 @@
+LibriSpeech CLAP Similarity Evaluation Results
+Evaluating 20 samples
+================================================================================
+
+174-168635-0007.flac: 0.5004 - a man speaking with a well-articulated voice while reading from a book
+174-50561-0015.flac: 0.6032 - a high pitched man speaking with a measured voice while reading aloud
+174-84280-0013.flac: 0.4726 - a man speaking with a calm voice while reading from a book
+1993-147149-0021.flac: 0.6256 - a woman speaking with a clear voice while narrating a story
+2035-152373-0014.flac: 0.6501 - a woman person speaking with a measured voice while reading aloud
+2078-142845-0041.flac: 0.4552 - a person speaking with a neutral voice while reading an audiobook
+2086-149220-0000.flac: 0.5888 - a man speaking with a pleasant voice while reading from a book
+2086-149220-0031.flac: 0.6022 - a man speaking with a well-articulated voice while reading aloud
+2428-83705-0024.flac: 0.5119 - a man speaking with a steady voice while reading from a book
+251-118436-0016.flac: 0.5083 - a male voice speaking with a raspy voice while reading aloud
+251-136532-0001.flac: 0.6749 - a man speaking with a confident voice while reading aloud
+2902-9006-0017.flac: 0.5383 - a middle aged man speaking with an expressive voice in a studio
+2902-9006-0018.flac: 0.4894 - a person speaking with a thoughtful voice while reading from a philosophical text
+3170-137482-0019.flac: 0.5746 - a person speaking with a measured voice while reading an audiobook
+5338-24615-0007.flac: 0.4426 - a person speaking with a calm voice while narrating a story
+5536-43358-0012.flac: 0.5355 - a person speaking with a steady voice while reading an audiobook
+5694-64025-0018.flac: 0.4512 - a contemplative person speaking with a clear voice while speaking briefly
+777-126732-0004.flac: 0.5282 - a person speaking with a measured voice while reading an audiobook
+777-126732-0015.flac: 0.6591 - a man speaking with a clear voice while reading aloud
+8297-275154-0015.flac: 0.4284 - a person speaking with a clear voice while speaking briefly
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+Number of samples: 20
+Mean similarity: 0.5420
+Std deviation: 0.0744
+Min similarity: 0.4284
+Max similarity: 0.6749
+Median similarity: 0.5318
+================================================================================
